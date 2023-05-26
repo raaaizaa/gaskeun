@@ -11,9 +11,11 @@ import android.widget.Toast;
 
 public class login extends AppCompatActivity {
 
-    private EditText email, password;
-    private Button signin;
-    private TextView signuphere;
+    private EditText emailTextField, passwordTextField;
+    private Button loginButton;
+    private TextView signUpHereText;
+    user_database_helper userDb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,38 +24,44 @@ public class login extends AppCompatActivity {
         initialize();
     }
 
-    public void initialize(){
-        email = findViewById(R.id.emailLoginField);
-        password = findViewById(R.id.passwordLoginField);
+    private void initialize(){
+        emailTextField = findViewById(R.id.emailLoginField);
+        passwordTextField = findViewById(R.id.passwordLoginField);
+        loginButton = findViewById(R.id.signInButton);
+        signUpHereText = findViewById(R.id.signUpHere);
 
-        signin = findViewById(R.id.signInButton);
-        setSignin();
-
-        signuphere = findViewById(R.id.signUpHere);
-        setSignuphere();
+        setListener();
     }
 
-    public void setSignin(){
-        signin.setOnClickListener(e -> {
-            String inputtedEmail = email.getText().toString();
-            String inputtedPassword = password.getText().toString();
+    private void setListener(){
+        loginButton.setOnClickListener(e -> {
+            userDb = new user_database_helper(this);
+            String email = emailTextField.getText().toString();
+            String password = passwordTextField.getText().toString();
+            boolean isUserValid = userDb.loginCheck(email, password);
 
-            if(inputtedEmail.isEmpty() || inputtedPassword.isEmpty()){
-                Toast.makeText(this, "All fields must be filled!", Toast.LENGTH_SHORT).show();
+            if(email.isEmpty() || password.isEmpty()){
+                showToast("All fields must be filled!");
+            }else{
+                if(isUserValid){
+                    showToast("Login Success!");
+                }else{
+                    showToast("Invalid user!");
+                }
             }
-
-            // Selanjutnya validasi database, dsb. lieur.
         });
-    }
 
-    public void setSignuphere(){
-        signuphere.setOnClickListener(e -> {
+        signUpHereText.setOnClickListener(e -> {
             openRegisterPage();
         });
     }
 
-    public void openRegisterPage(){
+    private void openRegisterPage(){
         Intent intent = new Intent(this, register.class);
         startActivity(intent);
+    }
+
+    private void showToast(String message){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

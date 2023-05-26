@@ -66,7 +66,7 @@
                     android:drawablePadding="6dp"
                     android:autofillHints="name"
                     android:inputType="textPersonName"
-                    android:hint="Full Name" />
+                    android:hint="Name" />
 
                 <EditText
                     android:id="@+id/emailRegisterField"
